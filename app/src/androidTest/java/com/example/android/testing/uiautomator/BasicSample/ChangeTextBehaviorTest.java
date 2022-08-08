@@ -16,6 +16,8 @@
 
 package com.example.android.testing.uiautomator.BasicSample;
 
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -59,24 +61,6 @@ public class ChangeTextBehaviorTest {
     public void startMainActivityFromHomeScreen() {
         // Initialize UiDevice instance
         mDevice = UiDevice.getInstance(getInstrumentation());
-
-        // Start from the home screen
-        mDevice.pressHome();
-
-        // Wait for launcher
-        final String launcherPackage = getLauncherPackageName();
-        assertThat(launcherPackage, notNullValue());
-        mDevice.wait(Until.hasObject(By.pkg(launcherPackage).depth(0)), LAUNCH_TIMEOUT);
-
-        // Launch the blueprint app
-        Context context = getApplicationContext();
-        final Intent intent = context.getPackageManager()
-                .getLaunchIntentForPackage(BASIC_SAMPLE_PACKAGE);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);    // Clear out any previous instances
-        context.startActivity(intent);
-
-        // Wait for the app to appear
-        mDevice.wait(Until.hasObject(By.pkg(BASIC_SAMPLE_PACKAGE).depth(0)), LAUNCH_TIMEOUT);
     }
 
     @Test
@@ -85,33 +69,63 @@ public class ChangeTextBehaviorTest {
     }
 
     @Test
-    public void testChangeText_sameActivity() {
-        // Type text and then press the button.
-        mDevice.findObject(By.res(BASIC_SAMPLE_PACKAGE, "editTextUserInput"))
-                .setText(STRING_TO_BE_TYPED);
-        mDevice.findObject(By.res(BASIC_SAMPLE_PACKAGE, "changeTextBt"))
-                .click();
+    public void testRichmonds() {
 
-        // Verify the test is displayed in the Ui
-        UiObject2 changedText = mDevice
-                .wait(Until.findObject(By.res(BASIC_SAMPLE_PACKAGE, "textToBeChanged")),
-                        500 /* wait 500ms */);
-        assertThat(changedText.getText(), is(equalTo(STRING_TO_BE_TYPED)));
-    }
+        List<String> dates = List.of("8", "9", "10", "11", "12");
+        String bus = "Central Cambridge";
+        int gcIdx = 0;
+        String source = "Centennial Hotel";
+        String dest = "Botanic Garden";
+        String arrivalTime = "08:50";
+        String departureTime = "17:15";
 
-    @Test
-    public void testChangeText_newActivity() {
-        // Type text and then press the button.
-        mDevice.findObject(By.res(BASIC_SAMPLE_PACKAGE, "editTextUserInput"))
-                .setText(STRING_TO_BE_TYPED);
-        mDevice.findObject(By.res(BASIC_SAMPLE_PACKAGE, "activityChangeTextBtn"))
-                .click();
+        for (int i = 0; i < dates.size(); i++) {
 
-        // Verify the test is displayed in the Ui
-        UiObject2 changedText = mDevice
-                .wait(Until.findObject(By.res(BASIC_SAMPLE_PACKAGE, "show_text_view")),
-                        500 /* wait 500ms */);
-        assertThat(changedText.getText(), is(equalTo(STRING_TO_BE_TYPED)));
+            String date = dates.get(i);
+
+            // There...
+
+            mDevice.findObject(new UiSelector().textContains("Reserve a seat")).click();
+            mDevice.findObject(new UiSelector().textContains("Route")).click();
+            mDevice.findObject(new UiSelector().textContains("Wellcome Genome Campus").instance(gcIdx)).click();
+
+            mDevice.findObject(new UiSelector().textContains("Origin")).click();
+            mDevice.findObject(new UiSelector().textContains(source)).click();
+            mDevice.findObject(new UiSelector().textContains("Wellcome Genome Campus")).click();
+
+            mDevice.findObject(new UiSelector().textContains("Departing")).click();
+            mDevice.findObject(new UiSelector().textContains(date)).click();
+            mDevice.findObject(new UiSelector().textContains("Confirm")).click();
+            mDevice.findObject(new UiSelector().textContains("Let's go")).click();
+
+            mDevice.findObject(new UiSelector().textContains(arrivalTime)).click();
+
+            mDevice.findObject(new UiSelector().textContains("I understand")).click();
+            mDevice.findObject(new UiSelector().textContains("Reserve Now")).click();
+            mDevice.wait(Until.findObject(By.text("OK")), 10000);
+            mDevice.findObject(new UiSelector().textContains("OK")).click();
+
+            // ...and back again
+
+            mDevice.findObject(new UiSelector().textContains("Reserve a seat")).click();
+            mDevice.findObject(new UiSelector().textContains("Route")).click();
+            mDevice.findObject(new UiSelector().textContains(bus)).click();
+
+            mDevice.findObject(new UiSelector().textContains("Origin")).click();
+            mDevice.findObject(new UiSelector().textContains("Wellcome Genome Campus")).click();
+            mDevice.findObject(new UiSelector().textContains(dest)).click();
+
+            mDevice.findObject(new UiSelector().textContains("Departing")).click();
+            mDevice.findObject(new UiSelector().textContains(date)).click();
+            mDevice.findObject(new UiSelector().textContains("Confirm")).click();
+            mDevice.findObject(new UiSelector().textContains("Let's go")).click();
+
+            mDevice.findObject(new UiSelector().textContains(departureTime)).click();
+
+            mDevice.findObject(new UiSelector().textContains("I understand")).click();
+            mDevice.findObject(new UiSelector().textContains("Reserve Now")).click();
+            mDevice.wait(Until.findObject(By.text("OK")), 10000);
+            mDevice.findObject(new UiSelector().textContains("OK")).click();
     }
 
     /**
