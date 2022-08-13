@@ -62,6 +62,9 @@ public class ChangeTextBehaviorTest {
 
         mDevice = UiDevice.getInstance(getInstrumentation());
 
+        // Start from the home screen, why not
+        mDevice.pressHome();
+
         mDevice.findObject(new UiSelector().textContains("Richmonds")).click();
         mDevice.wait(Until.findObject(By.text("Reserve")), 10000);
         if(new UiSelector().textContains("Reserve a seat") == null) {
@@ -73,12 +76,25 @@ public class ChangeTextBehaviorTest {
     @Test
     public void automateRichmonds() throws Exception {
 
+        // List of dates to book
         List<String> dates = List.of("8", "9", "10", "11", "12");
+
+        // Bus name
         String bus = "Central Cambridge";
+
+        // To genome campus bus index - CC : 0, EC : 1, NC : 2, SC : 3
         int gcIdx = 0;
+
+        // Source bus stop (morning)
         String source = "Centennial Hotel";
+
+        // Destination bus stop (evening)
         String dest = "Botanic Garden";
+
+        // Source (morning) bus stop departure time
         String arrivalTime = "08:50";
+
+        // Destination (evening) bus stop departure time
         String departureTime = "17:15";
 
         for (int i = 0; i < dates.size(); i++) {
