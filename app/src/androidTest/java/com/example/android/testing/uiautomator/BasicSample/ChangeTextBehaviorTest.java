@@ -49,13 +49,6 @@ import static org.junit.Assert.assertThat;
 @SdkSuppress(minSdkVersion = 18)
 public class ChangeTextBehaviorTest {
 
-    private static final String BASIC_SAMPLE_PACKAGE
-            = "com.example.android.testing.uiautomator.BasicSample";
-
-    private static final int LAUNCH_TIMEOUT = 5000;
-
-    private static final String STRING_TO_BE_TYPED = "UiAutomator";
-
     private UiDevice mDevice;
 
     @Test
@@ -65,9 +58,13 @@ public class ChangeTextBehaviorTest {
 
 //    @Test
     @Before
-    public void startMainActivityFromHomeScreen() {
+    public void startMainActivityFromHomeScreen() throws Exception {
 
         mDevice = UiDevice.getInstance(getInstrumentation());
+
+        mDevice.findObject(new UiSelector().textContains("Richmonds")).click();
+        mDevice.wait(Until.findObject(By.text("Reserve")), 10000);
+        mDevice.findObject(new UiSelector().textContains("Reserve")).click();
 
     }
 
