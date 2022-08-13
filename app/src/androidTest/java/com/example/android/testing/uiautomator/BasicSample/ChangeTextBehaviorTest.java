@@ -35,6 +35,7 @@ import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject2;
 import androidx.test.uiautomator.Until;
+import androidx.test.uiautomator.UiSelector;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -57,19 +58,21 @@ public class ChangeTextBehaviorTest {
 
     private UiDevice mDevice;
 
-    @Before
-    public void startMainActivityFromHomeScreen() {
-        // Initialize UiDevice instance
-        mDevice = UiDevice.getInstance(getInstrumentation());
-    }
-
     @Test
     public void checkPreconditions() {
         assertThat(mDevice, notNullValue());
     }
 
+//    @Test
+    @Before
+    public void startMainActivityFromHomeScreen() {
+
+        mDevice = UiDevice.getInstance(getInstrumentation());
+
+    }
+
     @Test
-    public void testRichmonds() {
+    public void automateRichmonds() throws Exception {
 
         List<String> dates = List.of("8", "9", "10", "11", "12");
         String bus = "Central Cambridge";
@@ -126,6 +129,9 @@ public class ChangeTextBehaviorTest {
             mDevice.findObject(new UiSelector().textContains("Reserve Now")).click();
             mDevice.wait(Until.findObject(By.text("OK")), 10000);
             mDevice.findObject(new UiSelector().textContains("OK")).click();
+
+        }
+
     }
 
     /**
