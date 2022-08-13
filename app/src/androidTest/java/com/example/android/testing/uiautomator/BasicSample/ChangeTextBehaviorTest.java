@@ -64,7 +64,9 @@ public class ChangeTextBehaviorTest {
 
         mDevice.findObject(new UiSelector().textContains("Richmonds")).click();
         mDevice.wait(Until.findObject(By.text("Reserve")), 10000);
-        mDevice.findObject(new UiSelector().textContains("Reserve")).click();
+        if(new UiSelector().textContains("Reserve a seat") == null) {
+            mDevice.findObject(new UiSelector().textContains("Reserve")).click();
+        }
 
     }
 
