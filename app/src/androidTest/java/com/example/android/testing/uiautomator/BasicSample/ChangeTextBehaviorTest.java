@@ -121,6 +121,7 @@ public class ChangeTextBehaviorTest {
         bundle.putString("BUS", testBundle.getString("bus"));
         bundle.putString("dates", dates.get(1));
         bundle.putString("gcIdx", String.valueOf(gcIdx));
+        bundle.putString("ARRIVAL", testBundle.getString("arrivalTime"));
         Instrumentation ins = getInstrumentation();
         ins.sendStatus(1, bundle);
         ins.addResults(bundle);
