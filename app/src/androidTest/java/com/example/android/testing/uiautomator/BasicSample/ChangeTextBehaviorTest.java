@@ -16,11 +16,16 @@
 
 package com.example.android.testing.uiautomator.BasicSample;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
+import android.os.Bundle;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import android.app.Instrumentation;
 
 import android.content.Context;
 import android.content.Intent;
@@ -31,6 +36,7 @@ import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import androidx.test.filters.SdkSuppress;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject2;
@@ -51,6 +57,27 @@ public class ChangeTextBehaviorTest {
 
     private UiDevice mDevice;
 
+    // List of dates to book
+    private List<String> dates = new ArrayList<>();// = List.of("0", "1");
+
+    // Bus name
+    private String bus = "Central Cambridge";
+
+    // To genome campus bus index - CC : 0, EC : 1, NC : 2, SC : 3
+    private int gcIdx = 0;
+
+    // Source bus stop (morning)
+    private String source = "Centennial Hotel";
+
+    // Destination bus stop (evening)
+    private String dest = "Botanic Garden";
+
+    // Source (morning) bus stop departure time
+    private String arrivalTime = "08:50";
+
+    // Destination (evening) bus stop departure time
+    private String departureTime = "17:15";
+
     @Test
     public void checkPreconditions() {
         assertThat(mDevice, notNullValue());
@@ -65,6 +92,39 @@ public class ChangeTextBehaviorTest {
         // Start from the home screen, why not
         mDevice.pressHome();
 
+        Bundle testBundle = InstrumentationRegistry.getArguments();
+
+        String[] datesArg = testBundle.getString("dates").split(",");
+
+        Collections.addAll(dates, datesArg);
+
+        if (testBundle.getString("bus") != null){
+            bus = testBundle.getString("bus");
+        }
+        if (testBundle.getString("gcIdx") != null){
+            gcIdx = Integer.parseInt(testBundle.getString("gcIdx"));
+        }
+        if (testBundle.getString("source") != null){
+            source = testBundle.getString("source");
+        }
+        if (testBundle.getString("dest") != null){
+            dest = testBundle.getString("dest");
+        }
+        if (testBundle.getString("arrivalTime") != null){
+            arrivalTime = testBundle.getString("arrivalTime");
+        }
+        if (testBundle.getString("departureTime") != null){
+            departureTime = testBundle.getString("departureTime");
+        }
+
+        Bundle bundle = new Bundle();
+        bundle.putString("BUS", testBundle.getString("bus"));
+        bundle.putString("dates", dates.get(1));
+        bundle.putString("gcIdx", String.valueOf(gcIdx));
+        Instrumentation ins = getInstrumentation();
+        ins.sendStatus(1, bundle);
+        ins.addResults(bundle);
+
         mDevice.findObject(new UiSelector().textContains("Richmonds")).click();
         mDevice.wait(Until.findObject(By.text("Reserve")), 10000);
         if(new UiSelector().textContains("Reserve a seat") == null) {
@@ -76,26 +136,13 @@ public class ChangeTextBehaviorTest {
     @Test
     public void automateRichmonds() throws Exception {
 
-        // List of dates to book
-        List<String> dates = List.of("8", "9", "10", "11", "12");
+        Bundle testBundle = InstrumentationRegistry.getArguments();
 
-        // Bus name
-        String bus = "Central Cambridge";
-
-        // To genome campus bus index - CC : 0, EC : 1, NC : 2, SC : 3
-        int gcIdx = 0;
-
-        // Source bus stop (morning)
-        String source = "Centennial Hotel";
-
-        // Destination bus stop (evening)
-        String dest = "Botanic Garden";
-
-        // Source (morning) bus stop departure time
-        String arrivalTime = "08:50";
-
-        // Destination (evening) bus stop departure time
-        String departureTime = "17:15";
+//        Bundle bundle = new Bundle();
+//        bundle.putString("BUS", testBundle.getString("bus"));
+//        Instrumentation ins = getInstrumentation();
+//        ins.sendStatus(1, bundle);
+//        ins.addResults(bundle);
 
         for (int i = 0; i < dates.size(); i++) {
 

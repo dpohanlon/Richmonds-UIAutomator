@@ -28,6 +28,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Dummy
+        super.onCreate(savedInstanceState);
     }
 
     @Override
