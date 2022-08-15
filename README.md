@@ -4,7 +4,7 @@ This requires a pre-prepared Android image with the Richmonds app (with a logged
 
 Start the emulator (here the AVD is called 'Richmonds'):
 
-``shell
+```shell
 emulator -avd Richmonds -no-window -no-audio &
 ```
 
