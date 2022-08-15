@@ -1,27 +1,29 @@
 # UIAutomator for the Richmonds app
 
-```shell
-adb install -r -g app/build/outputs/apk/debug/app-debug.apk
+This requires a pre-prepared Android image with the Richmonds app (with a logged in user) on the first page of the home screen.
+
+Start the emulator (here the AVD is called 'Richmonds'):
+
+``shell
+emulator -avd Richmonds -no-window -no-audio &
 ```
 
-Or build and install using `gradlew`
+If required, build and install the test environment using `gradlew`
 
 ```shell
 ./gradlew clean installDebug installDebugAndroidTest
 ```
 
-(on mac this might require a new JDK version)
+(on mac this might require a new JDK version,
 
 ```shell
 brew tap homebrew/cask-versions
 brew install --cask zulu11
 ```
+)
 
-```shell
-adb shell am instrument -w com.example.android.testing.uiautomator.BasicSample.test/androidx.test.runner.AndroidJUnitRunner
-```
 
-With command line args:
+Run the UIAutomator class with command line args corresponding to a bus configuration:
 
 ```shell
 adb shell am instrument -r -e class com.example.android.testing.uiautomator.BasicSample.ChangeTextBehaviorTest \

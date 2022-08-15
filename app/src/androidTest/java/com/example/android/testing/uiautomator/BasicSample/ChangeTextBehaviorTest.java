@@ -58,7 +58,7 @@ public class ChangeTextBehaviorTest {
     private UiDevice mDevice;
 
     // List of dates to book
-    private List<String> dates = new ArrayList<>();// = List.of("0", "1");
+    private List<String> dates = new ArrayList<>();
 
     // Bus name
     private String bus = "Central Cambridge";
@@ -87,17 +87,15 @@ public class ChangeTextBehaviorTest {
     @Before
     public void startMainActivityFromHomeScreen() throws Exception {
 
-        mDevice = UiDevice.getInstance(getInstrumentation());
-
-        // Start from the home screen, why not
-        mDevice.pressHome();
-
+        // Get command line args
         Bundle testBundle = InstrumentationRegistry.getArguments();
 
+        // Split string of dates and insert into a list
         String[] datesArg = testBundle.getString("dates").split(",");
 
         Collections.addAll(dates, datesArg);
 
+        // Fill other args
         if (testBundle.getString("bus") != null){
             bus = testBundle.getString("bus");
         }
@@ -117,15 +115,25 @@ public class ChangeTextBehaviorTest {
             departureTime = testBundle.getString("departureTime");
         }
 
+        // Debugging
+
         Bundle bundle = new Bundle();
         bundle.putString("BUS", testBundle.getString("bus"));
         bundle.putString("dates", dates.get(1));
         bundle.putString("gcIdx", String.valueOf(gcIdx));
         bundle.putString("ARRIVAL", testBundle.getString("arrivalTime"));
+
         Instrumentation ins = getInstrumentation();
         ins.sendStatus(1, bundle);
         ins.addResults(bundle);
 
+        // Set device
+        mDevice = UiDevice.getInstance(getInstrumentation());
+
+        // Start from the home screen
+        mDevice.pressHome();
+
+        // Launch the app (and go to the 'Reserve' screen if not there already)
         mDevice.findObject(new UiSelector().textContains("Richmonds")).click();
         mDevice.wait(Until.findObject(By.text("Reserve")), 10000);
         if(new UiSelector().textContains("Reserve a seat") == null) {
@@ -136,14 +144,6 @@ public class ChangeTextBehaviorTest {
 
     @Test
     public void automateRichmonds() throws Exception {
-
-        Bundle testBundle = InstrumentationRegistry.getArguments();
-
-//        Bundle bundle = new Bundle();
-//        bundle.putString("BUS", testBundle.getString("bus"));
-//        Instrumentation ins = getInstrumentation();
-//        ins.sendStatus(1, bundle);
-//        ins.addResults(bundle);
 
         for (int i = 0; i < dates.size(); i++) {
 
