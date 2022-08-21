@@ -160,7 +160,8 @@ public class ChangeTextBehaviorTest {
             mDevice.findObject(new UiSelector().textContains("Wellcome Genome Campus")).click();
 
             mDevice.findObject(new UiSelector().textContains("Departing")).click();
-            mDevice.findObject(new UiSelector().textContains(date)).click();
+            mDevice.wait(Until.findObject(By.text(date)), 10000);
+            mDevice.findObject(new UiSelector().textContains(date).instance(0)).click();
             mDevice.findObject(new UiSelector().textContains("Confirm")).click();
             mDevice.findObject(new UiSelector().textContains("Let's go")).click();
 
@@ -182,7 +183,8 @@ public class ChangeTextBehaviorTest {
             mDevice.findObject(new UiSelector().textContains(dest)).click();
 
             mDevice.findObject(new UiSelector().textContains("Departing")).click();
-            mDevice.findObject(new UiSelector().textContains(date)).click();
+            mDevice.wait(Until.findObject(By.text(date)), 10000);
+            mDevice.findObject(new UiSelector().textContains(date).instance(0)).click();
             mDevice.findObject(new UiSelector().textContains("Confirm")).click();
             mDevice.findObject(new UiSelector().textContains("Let's go")).click();
 
