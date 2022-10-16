@@ -19,6 +19,7 @@ package com.example.android.testing.uiautomator.BasicSample;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import android.os.Bundle;
 
@@ -39,7 +40,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.UiDevice;
-import androidx.test.uiautomator.UiObject2;
+import androidx.test.uiautomator.UiObject;
 import androidx.test.uiautomator.Until;
 import androidx.test.uiautomator.UiSelector;
 
@@ -83,7 +84,43 @@ public class ChangeTextBehaviorTest {
         assertThat(mDevice, notNullValue());
     }
 
-//    @Test
+    public void resetDateTime() throws Exception {
+
+        mDevice.pressRecentApps();
+
+        mDevice.wait(Until.findObject(By.text("Screenshot")), 10000);
+
+        int startX = mDevice.getDisplayWidth() / 2;
+        int startY = (mDevice.getDisplayHeight() / 2) + 400;
+        int endX = mDevice.getDisplayWidth() / 2;
+        int endY = (mDevice.getDisplayHeight() / 2) - 400;
+
+        mDevice.swipe(startX,startY,endX,endY,8);
+
+        // Start from the home screen
+        mDevice.pressHome();
+
+        mDevice.wait(Until.findObject(By.text("Richmonds")), 10000);
+
+        mDevice.swipe(startX,startY,endX,endY, 20);
+
+        mDevice.wait(Until.findObject(By.text("Settings")), 10000);
+        mDevice.findObject(new UiSelector().textMatches("^Settings")).click();
+
+        mDevice.wait(Until.findObject(By.text("Battery")), 10000);
+        mDevice.swipe(startX,startY + 200,endX,endY - 200, 10);
+        mDevice.swipe(startX,startY + 200,endX,endY - 200, 10);
+        mDevice.findObject(new UiSelector().textContains("System")).click();
+
+        mDevice.wait(Until.findObject(By.text("Date")), 10000);
+        mDevice.findObject(new UiSelector().textContains("Date")).click();
+
+        mDevice.wait(Until.findObject(By.text("Set time")), 10000);
+        mDevice.findObject(new UiSelector().textContains("Set time")).click();
+        mDevice.findObject(new UiSelector().textContains("Set time")).click();
+
+    }
+
     @Before
     public void startMainActivityFromHomeScreen() throws Exception {
 
@@ -129,6 +166,8 @@ public class ChangeTextBehaviorTest {
 
         // Set device
         mDevice = UiDevice.getInstance(getInstrumentation());
+
+        resetDateTime();
 
         // Start from the home screen
         mDevice.pressHome();
