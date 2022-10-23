@@ -130,7 +130,12 @@ public class ChangeTextBehaviorTest {
         // Split string of dates and insert into a list
         String[] datesArg = testBundle.getString("dates").split(",");
 
-        Collections.addAll(dates, datesArg);
+        // If the list is empty, then probably it's just a single element passed
+        if (datesArg.length == 0) {
+          dates.add(testBundle.getString("dates"));
+        } else {
+          Collections.addAll(dates, datesArg);
+        }
 
         // Fill other args
         if (testBundle.getString("bus") != null){
@@ -154,15 +159,15 @@ public class ChangeTextBehaviorTest {
 
         // Debugging
 
-        Bundle bundle = new Bundle();
-        bundle.putString("BUS", testBundle.getString("bus"));
-        bundle.putString("dates", dates.get(1));
-        bundle.putString("gcIdx", String.valueOf(gcIdx));
-        bundle.putString("ARRIVAL", testBundle.getString("arrivalTime"));
+        // Bundle bundle = new Bundle();
+        // bundle.putString("BUS", testBundle.getString("bus"));
+        // bundle.putString("dates", dates.get(1));
+        // bundle.putString("gcIdx", String.valueOf(gcIdx));
+        // bundle.putString("ARRIVAL", testBundle.getString("arrivalTime"));
 
-        Instrumentation ins = getInstrumentation();
-        ins.sendStatus(1, bundle);
-        ins.addResults(bundle);
+        // Instrumentation ins = getInstrumentation();
+        // ins.sendStatus(1, bundle);
+        // ins.addResults(bundle);
 
         // Set device
         mDevice = UiDevice.getInstance(getInstrumentation());
@@ -174,7 +179,7 @@ public class ChangeTextBehaviorTest {
 
         // Launch the app (and go to the 'Reserve' screen if not there already)
         mDevice.findObject(new UiSelector().textContains("Richmonds")).click();
-        mDevice.wait(Until.findObject(By.text("Reserve")), 10000);
+        mDevice.wait(Until.findObject(By.text("Reserve a seat")), 10000);
         if(new UiSelector().textContains("Reserve a seat") == null) {
             mDevice.findObject(new UiSelector().textContains("Reserve")).click();
         }
