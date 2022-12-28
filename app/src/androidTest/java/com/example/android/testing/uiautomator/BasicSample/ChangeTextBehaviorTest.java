@@ -205,7 +205,16 @@ public class ChangeTextBehaviorTest {
 
             mDevice.findObject(new UiSelector().textContains("Departing")).click();
             mDevice.wait(Until.findObject(By.text(date)), 10000);
-            mDevice.findObject(new UiSelector().textMatches("^" + date + "$").instance(0)).click();
+
+            UiSelector dateMatch = new UiSelector().textMatches("^" + date + "$");
+            UiObject dateButton = mDevice.findObject(dateMatch.instance(0));
+
+            if (!dateButton.isClickable()) {
+                dateButton = mDevice.findObject(dateMatch.instance(1));
+            }
+
+            dateButton.click();
+
             mDevice.findObject(new UiSelector().textContains("Confirm")).click();
             mDevice.findObject(new UiSelector().textContains("Let's go")).click();
 
@@ -228,7 +237,16 @@ public class ChangeTextBehaviorTest {
 
             mDevice.findObject(new UiSelector().textContains("Departing")).click();
             mDevice.wait(Until.findObject(By.text(date)), 10000);
-            mDevice.findObject(new UiSelector().textMatches("^" + date + "$").instance(0)).click();
+
+            dateMatch = new UiSelector().textMatches("^" + date + "$");
+            dateButton = mDevice.findObject(dateMatch.instance(0));
+
+            if (!dateButton.isClickable()) {
+                dateButton = mDevice.findObject(dateMatch.instance(1));
+            }
+
+            dateButton.click();
+
             mDevice.findObject(new UiSelector().textContains("Confirm")).click();
             mDevice.findObject(new UiSelector().textContains("Let's go")).click();
 
