@@ -40,6 +40,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.UiScrollable;
 import androidx.test.uiautomator.UiObject;
 import androidx.test.uiautomator.Until;
 import androidx.test.uiautomator.UiSelector;
@@ -107,9 +108,8 @@ public class ChangeTextBehaviorTest {
         mDevice.wait(Until.findObject(By.text("Settings")), 10000);
         mDevice.findObject(new UiSelector().textMatches("^Settings")).click();
 
-        mDevice.wait(Until.findObject(By.text("Battery")), 10000);
-        mDevice.swipe(startX,startY + 200,endX,endY - 200, 10);
-        mDevice.swipe(startX,startY + 200,endX,endY - 200, 10);
+        new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().text("System"));
+
         mDevice.findObject(new UiSelector().textContains("System")).click();
 
         mDevice.wait(Until.findObject(By.text("Date")), 10000);
@@ -178,8 +178,7 @@ public class ChangeTextBehaviorTest {
         mDevice.pressHome();
 
         // Launch the app (and go to the 'Reserve' screen if not there already)
-        mDevice.findObject(new UiSelector().textContains("Richmonds")).click();
-        mDevice.wait(Until.findObject(By.text("Reserve a seat")), 10000);
+        mDevice.findObject(new UiSelector().textContains("Richmonds")).clickAndWaitForNewWindow();
         if(new UiSelector().textContains("Reserve a seat") == null) {
             mDevice.findObject(new UiSelector().textContains("Reserve")).click();
         }
@@ -189,11 +188,15 @@ public class ChangeTextBehaviorTest {
     @Test
     public void automateRichmonds() throws Exception {
 
+        // Two loops some we can `continue` if one time is not available
+
         for (int i = 0; i < dates.size(); i++) {
 
             String date = dates.get(i);
 
             // There...
+
+            mDevice.wait(Until.findObject(By.text("Reserve a seat")), 10000);
 
             mDevice.findObject(new UiSelector().textContains("Reserve a seat")).click();
             mDevice.findObject(new UiSelector().textContains("Route")).click();
@@ -218,14 +221,30 @@ public class ChangeTextBehaviorTest {
             mDevice.findObject(new UiSelector().textContains("Confirm")).click();
             mDevice.findObject(new UiSelector().textContains("Let's go")).click();
 
-            mDevice.findObject(new UiSelector().textContains(arrivalTime)).click();
+            UiObject timeButton = mDevice.findObject(new UiSelector().textContains(arrivalTime));
+
+            // Check whether there is a seat free for that time
+            if (!timeButton.click()) {
+                // If not, bail out
+                mDevice.pressBack();
+                mDevice.pressBack();
+                continue;
+            }
 
             mDevice.findObject(new UiSelector().textContains("I understand")).click();
             mDevice.findObject(new UiSelector().textContains("Reserve Now")).click();
             mDevice.wait(Until.findObject(By.text("OK")), 10000);
             mDevice.findObject(new UiSelector().textContains("OK")).click();
 
+        }
+
+        for (int i = 0; i < dates.size(); i++) {
+
+            String date = dates.get(i);
+
             // ...and back again
+
+            mDevice.wait(Until.findObject(By.text("Reserve a seat")), 10000);
 
             mDevice.findObject(new UiSelector().textContains("Reserve a seat")).click();
             mDevice.findObject(new UiSelector().textContains("Route")).click();
@@ -238,8 +257,8 @@ public class ChangeTextBehaviorTest {
             mDevice.findObject(new UiSelector().textContains("Departing")).click();
             mDevice.wait(Until.findObject(By.text(date)), 10000);
 
-            dateMatch = new UiSelector().textMatches("^" + date + "$");
-            dateButton = mDevice.findObject(dateMatch.instance(0));
+            UiSelector dateMatch = new UiSelector().textMatches("^" + date + "$");
+            UiObject dateButton = mDevice.findObject(dateMatch.instance(0));
 
             if (!dateButton.isClickable()) {
                 dateButton = mDevice.findObject(dateMatch.instance(1));
@@ -250,7 +269,15 @@ public class ChangeTextBehaviorTest {
             mDevice.findObject(new UiSelector().textContains("Confirm")).click();
             mDevice.findObject(new UiSelector().textContains("Let's go")).click();
 
-            mDevice.findObject(new UiSelector().textContains(departureTime)).click();
+            UiObject timeButton = mDevice.findObject(new UiSelector().textContains(departureTime));
+
+            // Check whether there is a seat free for that time
+            if (!timeButton.click()) {
+                // If not, bail out
+                mDevice.pressBack();
+                mDevice.pressBack();
+                continue;
+            }
 
             mDevice.findObject(new UiSelector().textContains("I understand")).click();
             mDevice.findObject(new UiSelector().textContains("Reserve Now")).click();
